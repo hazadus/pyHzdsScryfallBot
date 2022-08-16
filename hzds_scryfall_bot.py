@@ -35,12 +35,19 @@ def query_scryfall(query):
         auto = scrython.cards.Autocomplete(q=query, query=query)
 
     if auto:
-        answer['card_description'] = "Вы хотели найти "
+        answer['card_description'] = "Возможно, вы хотели найти:\n"
         for item in auto.data():
-            answer['card_description'] = answer['card_description'] + "[" + item + "]"
-        answer['card_description'] = answer['card_description'] + "?"
+            answer['card_description'] = answer['card_description'] + f'[ <i>{item}</i> ]\n'
+        # answer['card_description'] = answer['card_description'] + "?"
     else:
-        answer['card_description'] = f"<b>{card.name()}</b>\n<i>{card.rarity()}</i> from <i>{card.set_name()}</i>\n{card.mana_cost()}\n{card.oracle_text()}"
+        answer['card_description'] = f"<b>{card.name()}</b>\n" \
+                                     f"{card.type_line()}\n" \
+                                     f"<i>{card.rarity()}</i> from <i>{card.set_name()}</i>\n" \
+                                     f"{card.mana_cost()}\n" \
+                                     f"\n" \
+                                     f"{card.oracle_text()}\n" \
+                                     f"\n" \
+                                     f'<a href="{card.scryfall_uri()}">Смотреть на Scryfall</a>'
         answer['image_file_path'] = save_image(IMAGE_SAVE_PATH, card.image_uris(0, 'normal'), card.name())
 
     return answer
@@ -54,7 +61,7 @@ def text(message):
               + str(message.chat.id) + "): " + message.text)
         query = message.text[len(BOT_NAME) + 1:]
         scry_answer = query_scryfall(query)
-        bot.reply_to(message, scry_answer['card_description'], parse_mode="HTML")
+        bot.reply_to(message, scry_answer['card_description'], parse_mode="HTML", disable_web_page_preview=True)
         if not scry_answer['image_file_path'] == "":
             card_image = open(scry_answer['image_file_path'], 'rb')
             bot.send_photo(message.chat.id, card_image)
