@@ -56,7 +56,7 @@ def query_scryfall(query):
 # любой текст
 @bot.message_handler(content_types=['text'])
 def text(message):
-    # TODO: don't require @mention in private chats
+    # TODO: don't require @mention in private chats!
     if message.text[:len(BOT_NAME)] == BOT_NAME:
         print(datetime.now().strftime('>>> %d %b %Y %H:%M (') + str(message.chat.type) + " "
               + str(message.chat.id) + "): " + message.text)
