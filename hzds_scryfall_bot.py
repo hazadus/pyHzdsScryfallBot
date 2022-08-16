@@ -38,7 +38,7 @@ def query_scryfall(query):
         answer['card_description'] = "Вы хотели найти "
         for item in auto.data():
             answer['card_description'] = answer['card_description'] + "[" + item + "]"
-            answer['card_description'] = answer['card_description'] + "?"
+        answer['card_description'] = answer['card_description'] + "?"
     else:
         answer['card_description'] = f"<b>{card.name()}</b>\n<i>{card.rarity()}</i> from <i>{card.set_name()}</i>\n{card.mana_cost()}\n{card.oracle_text()}"
         answer['image_file_path'] = save_image(IMAGE_SAVE_PATH, card.image_uris(0, 'normal'), card.name())

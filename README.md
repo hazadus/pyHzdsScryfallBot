@@ -24,5 +24,7 @@ Telegram bot to access Scryfall API from chats.
 - - [Форматирование текста python telebot](https://ru.stackoverflow.com/questions/1034947/Форматирование-текста-python-telebot)
 
 ## Installation
-- ...
+- Install packages
 - Change `loop = asyncio.get_event_loop` to `        loop = asyncio.new_event_loop() asyncio.set_event_loop(loop)` in `./scrython/foundation.py` to make Scrython calls work from bot.
+- Create folder titled `IMAGE_SAVE_PATH` in project folder.
+- Create file `bot_token.py` in project folder, with single constant `TOKEN = telegram_bot_token`
