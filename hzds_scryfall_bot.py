@@ -56,16 +56,29 @@ def query_scryfall(query):
 # любой текст
 @bot.message_handler(content_types=['text'])
 def text(message):
-    # TODO: don't require @mention in private chats!
-    if message.text[:len(BOT_NAME)] == BOT_NAME:
-        print(datetime.now().strftime('>>> %d %b %Y %H:%M (') + str(message.chat.type) + " "
-              + str(message.chat.id) + "): " + message.text)
-        query = message.text[len(BOT_NAME) + 1:]
-        scry_answer = query_scryfall(query)
-        bot.reply_to(message, scry_answer['card_description'], parse_mode="HTML", disable_web_page_preview=True)
-        if not scry_answer['image_file_path'] == "":
-            card_image = open(scry_answer['image_file_path'], 'rb')
-            bot.send_photo(message.chat.id, card_image)
+    print(datetime.now().strftime('>>> %d %b %Y %H:%M (') + str(message.chat.type) + " "
+          + str(message.chat.id) + "): " + message.text)
+
+    #
+    # приватный - это когда один на один переписываешься
+    #
+    if message.chat.type == 'private':
+        if message.text[:len(BOT_NAME)] == BOT_NAME:
+            query = message.text[len(BOT_NAME) + 1:]
+        else:
+            query = message.text
+    else:
+        if message.text[:len(BOT_NAME)] == BOT_NAME:
+            query = message.text[len(BOT_NAME) + 1:]
+        else:
+            return  # в группах отвечаем только на сообщения начинающиеся с BOT_NAME
+
+    scry_answer = query_scryfall(query)
+    bot.reply_to(message, scry_answer['card_description'], parse_mode="HTML", disable_web_page_preview=True)
+
+    if not scry_answer['image_file_path'] == "":
+        card_image = open(scry_answer['image_file_path'], 'rb')
+        bot.send_photo(message.chat.id, card_image)
 
 
 while True:
